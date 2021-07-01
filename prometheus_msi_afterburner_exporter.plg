@@ -1,0 +1,108 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+  <!ENTITY name      "prometheus_msi_afterburner_exporter">
+  <!ENTITY author    "ich777">
+  <!ENTITY version   "2021.07.01">
+  <!ENTITY launch    "Settings/pihole_exporter">
+  <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
+  <!ENTITY pluginURL "&gitURL;/&name;.plg">
+  <!ENTITY md5       "9c85882f393c0a33de1b54c433aff443">
+  <!ENTITY plugin    "/boot/config/plugins/&name;">
+  <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
+]>
+
+<PLUGIN  name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0" support="https://forums.unraid.net/topic/92865-support-ich777-nvidiadvbzfsiscsimft-kernel-helperbuilder-docker/">
+
+<CHANGES>
+
+###2021.07.01
+- Initial release - based on version v0.1.0
+
+</CHANGES>
+
+<FILE Run="/bin/bash">
+<INLINE>
+rm -f $(ls /boot/config/plugins/&name;/&name;*.tgz 2>/dev/null|grep -v '&version;')
+</INLINE>
+</FILE>
+
+<FILE Name="/boot/config/plugins/&name;/&name;-&version;.tgz" Run="upgradepkg --install-new">
+<URL>&gitURL;/packages/&name;-&version;.tgz</URL>
+<MD5>&md5;</MD5>
+</FILE>
+
+<FILE Name="&emhttp;/README.md">
+<INLINE>
+**Prometheus MSI Afterburner Exporter**
+
+Is a slim plugin, that takes informations gathered form your unRAID system and provides it to a Prometheus database. Usage is not limited to Prometheus only. Data can be formated and displayed to any database or graphical node.  
+Export URL: The URL for the exportet metrics is: 'http://YOURunRAIDIP:9091/metrics' (to use it in Prometheus add the target: 'YOURunRAIDIP:9100' to your Prometheus yaml).  
+This Plugin is based on node_exporter: https://github.com/kennedyoliveira/prometheus-msi-afterburner-exporter
+</INLINE>
+</FILE>
+
+<FILE Run="/bin/bash">
+<INLINE>
+
+#Create settings file if not found
+if [ ! -f "&plugin;/settings.cfg" ]; then
+  echo 'msi_hostname=
+msi_port=
+msi_username=
+msi_password=
+export-listen-address=0.0.0.0:9091
+export-metrics-encpoint=/metrics' > "&plugin;/settings.cfg"
+fi
+
+if [ -z "$(pidof prometheus_afterburner_exporter)" ]; then
+  MSI_HOST="$(cat &plugin;/settings.cfg | grep "msi_hostname=" | cut -d '=' -f2-)"
+  if [ ! -z "${MSI_HOST}" ]; then
+    MSI_PORT="$(cat &plugin;/settings.cfg | grep "msi_port=" | cut -d '=' -f2-)"
+    MSI_USER="$(cat &plugin;/settings.cfg | grep "msi_username=" | cut -d '=' -f2-)"
+    if [ ! -z "${MSI_USER}" ]; then
+      MSI_PASSWORD="$(cat &plugin;/settings.cfg | grep "msi_password=" | cut -d '=' -f2-)"
+    fi
+    EXP_LISTEN="$(cat &plugin;/settings.cfg | grep "export-listen-address=" | cut -d '=' -f2-)"
+    EXP_ENDPOINT="$(cat &plugin;/settings.cfg | grep "export-metrics-encpoint=" | cut -d '=' -f2-)"
+    #Starting Prometheus MSI Afterburner Exporter Daemon
+    if [ -z "${MSI_USER}" ]; then
+      echo
+      echo "-------------Starting Prometheus MSI Afterburner Exporter!--------------"
+      echo "/usr/bin/prometheus_afterburner_exporter host=${MSI_HOST} port=${MSI_PORT} listen-address=${EXP_LISTEN} metrics-endpoint=${EXP_ENDPOINT}" | at now
+    else
+      echo
+      echo "-------------Starting Prometheus MSI Afterburner Exporter!--------------"
+      echo "/usr/bin/prometheus_afterburner_exporter host=${MSI_HOST} port=${MSI_PORT} username=${MSI_USER} password=${MSI_PASSWORD} listen-address=${EXP_LISTEN} metrics-endpoint=${EXP_ENDPOINT}" | at now
+    fi
+  else
+    echo
+    echo "------No MSI Afterburner credentials found, not starting Exporter!------"
+  fi
+else
+  echo
+  echo "---Nothing to do, Prometheus MSI Afterburner Exporter already started---"
+fi
+
+</INLINE>
+</FILE>
+
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+
+echo "------------------------------------------------------"
+echo "---Uninstalling prometheus_msi_afterburner_exporter---"
+echo "------------------------------------------------------"
+# Remove plugin related files
+kill $(pidof prometheus_afterburner_exporter) 2>/dev/null
+removepkg &name;-&version;
+rm -rf /usr/local/emhttp/plugins/&name;
+rm -rf &plugin;
+echo
+echo "---------------------------------------------------------------------"
+echo "---Uninstallation of prometheus_msi_afterburner_exporter complete!---"
+echo "---------------------------------------------------------------------"
+echo
+
+</INLINE>
+</FILE>
+</PLUGIN>
