@@ -77,7 +77,8 @@ if [ -z "$(pidof prometheus_afterburner_exporter)" ]; then
     fi
   else
     echo
-    echo "------No MSI Afterburner credentials found, not starting Exporter!------"
+    echo "----Prometheus MSI Afterburner Exporter not configured, please enter----"
+    echo "-----the IP of the MSI Afterburner Remote Server on the plugin page-----"
   fi
 else
   echo
