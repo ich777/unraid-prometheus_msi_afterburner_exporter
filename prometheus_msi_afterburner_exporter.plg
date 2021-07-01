@@ -3,7 +3,7 @@
   <!ENTITY name      "prometheus_msi_afterburner_exporter">
   <!ENTITY author    "ich777">
   <!ENTITY version   "2021.07.01">
-  <!ENTITY launch    "Settings/pihole_exporter">
+  <!ENTITY launch    "Settings/afterburner_exporter">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
   <!ENTITY md5       "9c85882f393c0a33de1b54c433aff443">
