@@ -85,6 +85,8 @@ else
   echo "---Nothing to do, Prometheus MSI Afterburner Exporter already started---"
 fi
 
+echo
+
 </INLINE>
 </FILE>
 
