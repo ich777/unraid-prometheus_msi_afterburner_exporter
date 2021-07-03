@@ -48,7 +48,7 @@ This Plugin is based on node_exporter: https://github.com/kennedyoliveira/promet
 #Create settings file if not found
 if [ ! -f "&plugin;/settings.cfg" ]; then
   echo 'msi_hostname=
-msi_port=
+msi_port=82
 msi_username=
 msi_password=
 export-listen-address=0.0.0.0:9091
