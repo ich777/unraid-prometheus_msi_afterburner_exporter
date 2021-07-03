@@ -2,11 +2,11 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "prometheus_msi_afterburner_exporter">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2021.07.01">
+  <!ENTITY version   "2021.07.03">
   <!ENTITY launch    "Settings/afterburner_exporter">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
-  <!ENTITY md5       "9c85882f393c0a33de1b54c433aff443">
+  <!ENTITY md5       "cc7e337a0aa16d996241a43bd9657701">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
@@ -14,6 +14,9 @@
 <PLUGIN  name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0" support="https://forums.unraid.net/topic/92865-support-ich777-nvidiadvbzfsiscsimft-kernel-helperbuilder-docker/">
 
 <CHANGES>
+
+###2021.07.03
+- Added plugin configuration page
 
 ###2021.07.01
 - Initial release - based on version v0.1.0
