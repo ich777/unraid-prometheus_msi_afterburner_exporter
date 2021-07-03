@@ -1,4 +1,4 @@
-# Clone repository and compile PiHole Exporter
+# Clone repository and compile MSI Afterburner Exporter
 cd ${DATA_DIR}
 git clone https://github.com/kennedyoliveira/prometheus-msi-afterburner-exporter
 cd ${DATA_DIR}/prometheus-msi-afterburner-exporter
