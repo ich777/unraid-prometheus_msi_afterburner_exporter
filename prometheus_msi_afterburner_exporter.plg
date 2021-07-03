@@ -52,7 +52,7 @@ msi_port=82
 msi_username=
 msi_password=
 export-listen-address=0.0.0.0:9091
-export-metrics-encpoint=/metrics' > "&plugin;/settings.cfg"
+export-metrics-encdoint=/metrics' > "&plugin;/settings.cfg"
 fi
 
 if [ -z "$(pidof prometheus_afterburner_exporter)" ]; then
