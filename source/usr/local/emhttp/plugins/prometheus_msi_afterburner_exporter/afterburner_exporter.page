@@ -1,0 +1,185 @@
+Menu="Utilities"
+Title="Afterburner Exporter"
+Icon="prometheus_msi_afterburner_exporter.png"
+---
+<?php
+//Get selected variables
+$msi_hostname = shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh get_msi_hostname");
+$msi_port = shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh get_msi_port");
+$msi_username = shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh get_msi_username");
+$msi_password = shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh get_msi_password");
+$exporter_address = shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh get_exporter_address");
+$exporter_endpoint = shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh get_exporter_endpoint");
+$status = shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh get_status");
+?>
+
+<script>
+//Don't execute commands again if page is refreshed
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+
+<script>
+//Disable submit button if no radio button is selected
+$(function(){
+    $("input[type='radio']").change(function(){
+
+        $("input[type='submit']").prop("disabled", false);
+        //Or
+        //$("input[type='submit']").removeAttr("disabled");
+    });
+});
+</script>
+
+<h1 style="text-align: center;"><a target="_blank" rel="noopener"><span style="color: red;">Prometheus MSI Afterburner Exporter</span></a></h1>
+<p style="text-align: center;"><em><span style="text-decoration: underline;">This plugin requires the MSI Afterburner Remote Server on the machine that you want to watch, please configure the IP address of your local MSI Afterburner Remote Server on the Settings page from the plugin!</span></em><br /><br />Prometheus MSI Afterburner Exporter that takes informations gathered form the MSI Afterburner Remote Server API and provides it to a Prometheus database.<br /><strong>Export URL:</strong> The URL for the exportet metrics is: 'http://YOURunRAIDIP:9091/metrics' (to use it in Prometheus add the target: 'YOURunRAIDIP:9091' to your Prometheus yaml).</p>
+<div style="width: 100%; float:left">
+    <div id="title">
+        <span class="left"></span>
+    </div>
+<?
+if (isset($msi_hostname ) === true && trim($msi_hostname ) !== ''):
+?>
+<?
+if (isset($status ) === true && trim($status ) === 'running'):
+?>
+<h3 style="text-align: right;">Status: <strong><span style="color: green;">Running</span></strong></h3>
+<form id="STOP" method="post" >
+<input type="submit" name="stopEXPORTER" value="Stop" />
+</form>
+<h3><strong>Current Configuration:</strong></h3><br/>
+<table style="border-collapse: collapse; width: 400px; height: 100px;" border="0">
+<tr style="height: 18px;">
+<td style="height: 18px; border-style: hidden; width: 100px;"><strong>Afterburner Hostname/IP:</strong></td>
+<td style="width: 50%; height: 18px; border-style: none;"><?php print $msi_hostname ?></td>
+</tr>
+<tr style="height: 18px;">
+<td style="height: 18px; border-style: hidden; width: 100px;"><strong>Afterburner Port:</strong></td>
+<td style="width: 50%; height: 10px; border-style: none;"><?php print $msi_port ?></td>
+</tr>
+<tr style="height: 10px;">
+<td style="height: 10px; border-style: hidden; width: 100px;"><strong>Afterburner Username:</strong></td>
+<td style="width: 50%; height: 10px; border-style: none;"><?php print $msi_username ?></td>
+</tr>
+<tr style="height: 18px;">
+<td style="height: 18px; border-style: hidden; width: 100px;"><strong>Afterburner Password:</strong></td>
+<td style="width: 50%; height: 10px; border-style: none;">*********</td>
+</tr>
+<tr style="height: 18px;">
+<td style="height: 18px; border-style: hidden; width: 100px;"><strong>Exporter Address/Port:</strong></td>
+<td style="width: 50%; height: 18px; border-style: none;"><?php print $exporter_address ?></td>
+</tr>
+<tr style="height: 18px;">
+<td style="height: 18px; border-style: hidden; width: 100px;"><strong>Exporter Endpoint:</strong></td>
+<td style="width: 50%; height: 18px; border-style: none;"><?php print $exporter_endpoint ?></td>
+</table>
+<br/>
+<h3><strong>Change current Configuration:</strong></h3>
+<form id="CHANGESTART" method="post" >
+<input type = "text" style="width: 100px;" name = "msi_hostname" placeholder="127.0.0.1" required />
+<input type = "text" style="width: 30px;" name = "msi_port" placeholder="82" required value=<?php print $msi_port ?> />
+<input type = "hidden" name = "msi_username" value=<?php print $msi_username ?> />
+<input type = "hidden" name = "msi_password" value=<?php print $msi_password ?> />
+<input type = "hidden" name = "exporter_address" value=<?php print $exporter_port ?> />
+<input type = "hidden" name = "exporter_endpoint" value=<?php print $exporter_endpoint ?> />
+<input type="submit" name="changeMSIconfig" value="Change & Start" />
+</form>
+<?
+else :
+?>
+<h3 style="text-align: right;">Status: <strong><span style="color: red;">Stopped</span></strong></h3>
+<form id="s" method="post" >
+<input type = "hidden" name = "msi_hostname" value=<?php print $msi_hostname ?> />
+<input type = "hidden" name = "msi_port" value=<?php print $msi_port ?> />
+<input type = "hidden" name = "msi_username" value=<?php print $msi_username ?> />
+<input type = "hidden" name = "msi_password" value=<?php print $msi_password ?> />
+<input type = "hidden" name = "exporter_address" value=<?php print $exporter_address ?> />
+<input type = "hidden" name = "exporter_endpoint" value=<?php print $exporter_endpoint ?> />
+<input type="submit" name="START" value="Start" />
+</form>
+<h3><strong>Current Configuration:</strong></h3><br/>
+<table style="border-collapse: collapse; width: 400px; height: 100px;" border="0">
+<tr style="height: 18px;">
+<td style="height: 18px; border-style: hidden; width: 100px;"><strong>Afterburner Hostname/IP:</strong></td>
+<td style="width: 50%; height: 18px; border-style: none;"><?php print $msi_hostname ?></td>
+</tr>
+<tr style="height: 18px;">
+<td style="height: 18px; border-style: hidden; width: 100px;"><strong>Afterburner Port:</strong></td>
+<td style="width: 50%; height: 10px; border-style: none;"><?php print $msi_port ?></td>
+</tr>
+<tr style="height: 10px;">
+<td style="height: 10px; border-style: hidden; width: 100px;"><strong>Afterburner Username:</strong></td>
+<td style="width: 50%; height: 10px; border-style: none;"><?php print $msi_username ?></td>
+</tr>
+<tr style="height: 18px;">
+<td style="height: 18px; border-style: hidden; width: 100px;"><strong>Afterburner Password:</strong></td>
+<td style="width: 50%; height: 10px; border-style: none;">*********</td>
+</tr>
+<tr style="height: 18px;">
+<td style="height: 18px; border-style: hidden; width: 100px;"><strong>Exporter Address/Port:</strong></td>
+<td style="width: 50%; height: 18px; border-style: none;"><?php print $exporter_address ?></td>
+</tr>
+<tr style="height: 18px;">
+<td style="height: 18px; border-style: hidden; width: 100px;"><strong>Exporter Endpoint:</strong></td>
+<td style="width: 50%; height: 18px; border-style: none;"><?php print $exporter_endpoint ?></td>
+</table>
+<br/>
+<h3><strong>Change current Configuration:</strong></h3>
+<form id="s" method="post" >
+<input type = "text" style="width: 100px;" name = "msi_hostname" placeholder="127.0.0.1" required />
+<input type = "text" style="width: 30px;" name = "msi_port" placeholder="82" required value=<?php print $msi_port ?> />
+<input type = "hidden" name = "msi_username" value=<?php print $msi_username ?> />
+<input type = "hidden" name = "msi_password" value=<?php print $msi_password ?> />
+<input type = "hidden" name = "exporter_address" value=<?php print $exporter_address ?> />
+<input type = "hidden" name = "exporter_endpoint" value=<?php print $exporter_endpoint ?> />
+<input type="submit" name="changeMSIconfig" value="Change & Start" />
+</form>
+<? endif; ?>
+<? else: ?>
+<h2 style="text-align: center;"><span style="color: red;"><strong>MSI Afterburner Remote Server Hostname/IP not set!</strong></span></h2>
+<p style="text-align: center;">To get your Hostname/Port double click on the MSI Afterburner Remote Server icon in your Task bar.</p>
+<form id="s" method="post" >
+<input type = "text" style="width: 100px;" name = "msi_hostname" placeholder="127.0.0.1" required />
+<input type = "text" style="width: 30px;" name = "msi_port" placeholder="82" required value=<?php print $msi_port ?> />
+<input type = "hidden" name = "msi_username" value=<?php print $msi_username ?> />
+<input type = "hidden" name = "msi_password" value=<?php print $msi_password ?> />
+<input type = "hidden" name = "exporter_address" value=<?php print $exporter_address ?> />
+<input type = "hidden" name = "exporter_endpoint" value=<?php print $exporter_endpoint ?> />
+<input type="submit" name="changeMSIconfig" value="Change & Start" />
+</form>
+<? endif; ?>
+</div>
+
+<?php
+if(isset($_POST['changeMSIconfig'])) {
+$msi_hostname = $_POST["msi_hostname"];
+$msi_port = $_POST["msi_port"];
+$msi_username = $_POST["msi_username"];
+$msi_password = $_POST["msi_password"];
+$exporter_address = $_POST["exporter_address"];
+$exporter_endpoint = $_POST["exporter_endpoint"];
+shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh change_msi_settings $msi_hostname $msi_port $msi_username $msi_password $exporter_address $exporter_endpoint");
+echo '<script>parent.window.location.reload();</script>';
+}
+?>
+
+<?php
+if(isset($_POST['START'])) {
+$msi_hostname = $_POST["msi_hostname"];
+$msi_port = $_POST["msi_port"];
+$msi_username = $_POST["msi_username"];
+$msi_password = $_POST["msi_password"];
+$exporter_address = $_POST["exporter_address"];
+$exporter_endpoint = $_POST["exporter_endpoint"];
+shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh start $msi_hostname $msi_port $msi_username $msi_password $exporter_address $exporter_endpoint");
+echo '<script>parent.window.location.reload();</script>';
+}
+?>
+
+<?php
+if(isset($_POST['stopEXPORTER'])) {
+shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh stop_exporter");
+echo '<script>parent.window.location.reload();</script>';
+}
+?>
