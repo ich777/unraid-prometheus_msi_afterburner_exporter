@@ -52,8 +52,8 @@ This Plugin is based on node_exporter: https://github.com/kennedyoliveira/promet
 if [ ! -f "&plugin;/settings.cfg" ]; then
   echo 'msi_hostname=
 msi_port=82
-msi_username=
-msi_password=
+msi_username=MSIAfterburner
+msi_password=17cc95b4017d496f82
 export-listen-address=0.0.0.0:9091
 export-metrics-endpoint=/metrics' > "&plugin;/settings.cfg"
 fi
