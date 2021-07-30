@@ -54,7 +54,7 @@ if [ ! -f "&plugin;/settings.cfg" ]; then
 msi_port=82
 msi_username=MSIAfterburner
 msi_password=17cc95b4017d496f82
-export-listen-address=0.0.0.0:9091
+export-listen-address=0.0.0.0:9891
 export-metrics-endpoint=/metrics' > "&plugin;/settings.cfg"
 fi
 
