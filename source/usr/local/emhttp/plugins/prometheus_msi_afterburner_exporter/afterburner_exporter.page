@@ -33,7 +33,7 @@ $(function(){
 </script>
 
 <h1 style="text-align: center;"><a target="_blank" rel="noopener"><span style="color: red;">Prometheus MSI Afterburner Exporter</span></a></h1>
-<p style="text-align: center;"><em><span style="text-decoration: underline;">This plugin requires the MSI Afterburner Remote Server on the machine that you want to watch, please configure the IP address of your local MSI Afterburner Remote Server on the Settings page from the plugin!</span></em><br /><br />Prometheus MSI Afterburner Exporter that takes informations gathered form the MSI Afterburner Remote Server API and provides it to a Prometheus database.<br /><strong>Export URL:</strong> The URL for the exportet metrics is: 'http://YOURunRAIDIP:9091/metrics' (to use it in Prometheus add the target: 'YOURunRAIDIP:9091' to your Prometheus yaml).</p>
+<p style="text-align: center;"><em><span style="text-decoration: underline;">This plugin requires the MSI Afterburner Remote Server on the machine that you want to watch, please configure the IP address of your local MSI Afterburner Remote Server on the Settings page from the plugin!</span></em><br /><br />Prometheus MSI Afterburner Exporter that takes informations gathered form the MSI Afterburner Remote Server API and provides it to a Prometheus database.<br /><strong>Export URL:</strong> The URL for the exportet metrics is: 'http://YOURunRAIDIP:9891/metrics' (to use it in Prometheus add the target: 'YOURunRAIDIP:9891' to your Prometheus yaml).</p>
 <div style="width: 100%; float:left">
     <div id="title">
         <span class="left"></span>
@@ -42,7 +42,49 @@ $(function(){
 if (isset($msi_hostname ) === true && trim($msi_hostname ) !== ''):
 ?>
 <?
-if (isset($status ) === true && trim($status ) === 'running'):
+if (isset($status ) === true && trim($status ) === 'starting'):
+?>
+<h3 style="text-align: right;">Status: <strong><span style="color: orange;">Starting...</span></strong></h3>
+<h2 style="text-align: center;"><strong>Something seems wrong, Prometheus MSI Afterburner Exporter still starting, please try to refresh the page in a few minutes when the host is online or check your settings!</strong></h2>
+<br/>
+<table style="border-collapse: collapse; width: 400px; height: 100px;" border="0">
+<tr style="height: 18px;">
+<td style="height: 18px; border-style: hidden; width: 100px;"><strong>Afterburner Hostname/IP:</strong></td>
+<td style="width: 50%; height: 18px; border-style: none;"><?php print $msi_hostname ?></td>
+</tr>
+<tr style="height: 18px;">
+<td style="height: 18px; border-style: hidden; width: 100px;"><strong>Afterburner Port:</strong></td>
+<td style="width: 50%; height: 10px; border-style: none;"><?php print $msi_port ?></td>
+</tr>
+<tr style="height: 10px;">
+<td style="height: 10px; border-style: hidden; width: 100px;"><strong>Afterburner Username:</strong></td>
+<td style="width: 50%; height: 10px; border-style: none;"><?php print $msi_username ?></td>
+</tr>
+<tr style="height: 18px;">
+<td style="height: 18px; border-style: hidden; width: 100px;"><strong>Afterburner Password:</strong></td>
+<td style="width: 50%; height: 10px; border-style: none;">*********</td>
+</tr>
+<tr style="height: 18px;">
+<td style="height: 18px; border-style: hidden; width: 100px;"><strong>Exporter Address/Port:</strong></td>
+<td style="width: 50%; height: 18px; border-style: none;"><?php print $exporter_address ?></td>
+</tr>
+<tr style="height: 18px;">
+<td style="height: 18px; border-style: hidden; width: 100px;"><strong>Exporter Endpoint:</strong></td>
+<td style="width: 50%; height: 18px; border-style: none;"><?php print $exporter_endpoint ?></td>
+</table>
+<br/>
+<h3><strong>Change current Configuration:</strong></h3>
+<form id="CHANGESTART" method="post" >
+<input type = "text" style="width: 100px;" name = "msi_hostname" placeholder="127.0.0.1" required />
+<input type = "text" style="width: 30px;" name = "msi_port" placeholder="82" required value=<?php print $msi_port ?> />
+<input type = "hidden" name = "msi_username" value=<?php print $msi_username ?> />
+<input type = "hidden" name = "msi_password" value=<?php print $msi_password ?> />
+<input type = "hidden" name = "exporter_address" value=<?php print $exporter_port ?> />
+<input type = "hidden" name = "exporter_endpoint" value=<?php print $exporter_endpoint ?> />
+<input type="submit" name="changeMSIconfig" value="Change & Start" />
+</form>
+<?
+elseif (isset($status ) === true && trim($status ) === 'running'):
 ?>
 <h3 style="text-align: right;">Status: <strong><span style="color: green;">Running</span></strong></h3>
 <form id="STOP" method="post" >
