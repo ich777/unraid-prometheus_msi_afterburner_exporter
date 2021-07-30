@@ -69,7 +69,7 @@ if [ -z "$(pidof prometheus_afterburner_exporter)" ]; then
     #Starting Prometheus MSI Afterburner Exporter Daemon
     echo
     echo "-------------Starting Prometheus MSI Afterburner Exporter!--------------"
-    echo "/usr/bin/prometheus_afterburner_exporter -host=${MSI_HOST} -port=${MSI_PORT} -username=${MSI_USER} -password=${MSI_PASSWORD} -listen-address=${EXP_LISTEN} -metrics-endpoint=${EXP_ENDPOINT} 2>/dev/null" | at now
+    echo "&emhttp;/include/prometheus_afterburner_exporter_init.sh $MSI_HOST $MSI_PORT $MSI_USER $MSI_PASSWORD $EXP_LISTEN $EXP_ENDPOINT" | at now
   else
     echo
     echo "----Prometheus MSI Afterburner Exporter not configured, please enter----"
