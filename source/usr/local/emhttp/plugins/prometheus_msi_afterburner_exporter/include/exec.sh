@@ -27,12 +27,17 @@ echo -n "$(cat /boot/config/plugins/prometheus_msi_afterburner_exporter/settings
 function change_msi_settings(){
 sed -i "/msi_hostname=/c\msi_hostname=${1}" "/boot/config/plugins/prometheus_msi_afterburner_exporter/settings.cfg"
 sed -i "/msi_port=/c\msi_port=${2}" "/boot/config/plugins/prometheus_msi_afterburner_exporter/settings.cfg"
+if [ ! -z "$(pgrep -f prometheus_afterburner_exporter_init.sh)" ]; then
+  kill $(pgrep -f prometheus_afterburner_exporter_init.sh)
+fi
 kill $(pidof prometheus_afterburner_exporter)
 echo -n "$(echo "/usr/bin/prometheus_afterburner_exporter -host=$1 -port=$2 -username=$3 -password=$4 -listen-address=$5 -metrics-endpoint=$6" | at now)"
 }
 
 function get_status(){
-if [ ! -z "$(pidof prometheus_afterburner_exporter)" ]; then
+if [ ! -z "$(pgrep -f prometheus_afterburner_exporter_init.sh)" ]; then
+  echo -e "starting"
+elif [ ! -z "$(pidof prometheus_afterburner_exporter)" ]; then
   echo -e "running"
 else
   echo "stopped"
