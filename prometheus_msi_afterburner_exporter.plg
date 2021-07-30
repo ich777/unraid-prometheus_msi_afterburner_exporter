@@ -2,11 +2,11 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "prometheus_msi_afterburner_exporter">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2021.07.03">
+  <!ENTITY version   "2021.07.30">
   <!ENTITY launch    "Settings/afterburner_exporter">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
-  <!ENTITY md5       "cc7e337a0aa16d996241a43bd9657701">
+  <!ENTITY md5       "187cc3be23641ef7a1d935bc7029a340">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
@@ -14,6 +14,10 @@
 <PLUGIN  name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0" support="https://forums.unraid.net/topic/110995-plugin-prometheus-unraid-plugins/">
 
 <CHANGES>
+
+###2021.07.30
+- Changed default port to 9891 to avaid conflicts with Authelia
+- Added ping to wait for host to come online on boot
 
 ###2021.07.03
 - Added plugin configuration page
