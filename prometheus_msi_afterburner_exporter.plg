@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "prometheus_msi_afterburner_exporter">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2021.07.30">
+  <!ENTITY version   "2021.08.06">
   <!ENTITY launch    "Settings/afterburner_exporter">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
@@ -14,6 +14,9 @@
 <PLUGIN  name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0" support="https://forums.unraid.net/topic/110995-plugin-prometheus-unraid-plugins/">
 
 <CHANGES>
+
+###2021.08.06
+- Replaced ping with sleep time to wait for host on boot
 
 ###2021.07.30
 - Changed default port to 9891 to avaid conflicts with Authelia
@@ -59,7 +62,13 @@ msi_port=82
 msi_username=MSIAfterburner
 msi_password=17cc95b4017d496f82
 export-listen-address=0.0.0.0:9891
-export-metrics-endpoint=/metrics' > "&plugin;/settings.cfg"
+export-metrics-endpoint=/metrics
+sleep_time=30' > "&plugin;/settings.cfg"
+fi
+
+#Add sleep_time entry if not exists
+if [ ! "$(grep "sleep_time=" &plugin;/settings.cfg)" ]; then
+  echo "sleep_time=30" &gt;&gt; &plugin;/settings.cfg
 fi
 
 if [ -z "$(pidof prometheus_afterburner_exporter)" ]; then
@@ -70,10 +79,11 @@ if [ -z "$(pidof prometheus_afterburner_exporter)" ]; then
     MSI_PASSWORD="$(cat &plugin;/settings.cfg | grep "msi_password=" | cut -d '=' -f2-)"
     EXP_LISTEN="$(cat &plugin;/settings.cfg | grep "export-listen-address=" | cut -d '=' -f2-)"
     EXP_ENDPOINT="$(cat &plugin;/settings.cfg | grep "export-metrics-encpoint=" | cut -d '=' -f2-)"
+    SLEEP_TIME="$(cat &plugin;/settings.cfg | grep "sleep_time=" | cut -d '=' -f2-)"
     #Starting Prometheus MSI Afterburner Exporter Daemon
     echo
     echo "-------------Starting Prometheus MSI Afterburner Exporter!--------------"
-    echo "&emhttp;/include/prometheus_afterburner_exporter_init.sh $MSI_HOST $MSI_PORT $MSI_USER $MSI_PASSWORD $EXP_LISTEN $EXP_ENDPOINT" | at now
+    echo "&emhttp;/include/prometheus_afterburner_exporter_init.sh $MSI_HOST $MSI_PORT $MSI_USER $MSI_PASSWORD $EXP_LISTEN $EXP_ENDPOINT $SLEEP_TIME" | at now
   else
     echo
     echo "----Prometheus MSI Afterburner Exporter not configured, please enter----"
