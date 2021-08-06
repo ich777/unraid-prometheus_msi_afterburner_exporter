@@ -6,7 +6,7 @@
   <!ENTITY launch    "Settings/afterburner_exporter">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
-  <!ENTITY md5       "04d430725f002080edd9b300c0211607">
+  <!ENTITY md5       "2e123f027e110a838c99f634e70d9fb0">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
