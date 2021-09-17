@@ -10,6 +10,7 @@ $msi_username = shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner
 $msi_password = shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh get_msi_password");
 $exporter_address = shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh get_exporter_address");
 $exporter_endpoint = shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh get_exporter_endpoint");
+$sleep = shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh get_sleep");
 $status = shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh get_status");
 ?>
 
@@ -193,6 +194,14 @@ else :
 <? endif; ?>
 </div>
 
+<div>
+<p style="text-align: right;"><strong>If the exportet won't start on boot because your VM isn't online yet try to change this value to something higher <em>(default is 300 seconds)</em>.</strong></p>
+<form style="text-align: right" id="sleep" method="post" >
+<input type = "text" style="width: 25px;" name = "sleep_time" value=<?php print $sleep ?> />seconds
+<input type="submit" name="SLEEP" value="Change" />
+</form>
+</div>
+
 <?php
 if(isset($_POST['changeMSIconfig'])) {
 $msi_hostname = $_POST["msi_hostname"];
@@ -201,7 +210,7 @@ $msi_username = $_POST["msi_username"];
 $msi_password = $_POST["msi_password"];
 $exporter_address = $_POST["exporter_address"];
 $exporter_endpoint = $_POST["exporter_endpoint"];
-shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh change_msi_settings $msi_hostname $msi_port $msi_username $msi_password $exporter_address $exporter_endpoint");
+shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh change_msi_settings ".escapeshellarg($msi_hostname)." ".escapeshellarg($msi_port)." ".escapeshellarg($msi_username)." ".escapeshellarg($msi_password)." ".escapeshellarg($exporter_address)." ".escapeshellarg($exporter_endpoint)."");
 echo '<script>parent.window.location.reload();</script>';
 }
 ?>
@@ -214,7 +223,15 @@ $msi_username = $_POST["msi_username"];
 $msi_password = $_POST["msi_password"];
 $exporter_address = $_POST["exporter_address"];
 $exporter_endpoint = $_POST["exporter_endpoint"];
-shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh start $msi_hostname $msi_port $msi_username $msi_password $exporter_address $exporter_endpoint");
+shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh start ".escapeshellarg($msi_hostname)." ".escapeshellarg($msi_port)." ".escapeshellarg($msi_username)." ".escapeshellarg($msi_password)." ".escapeshellarg($exporter_address)." ".escapeshellarg($exporter_endpoint)."");
+echo '<script>parent.window.location.reload();</script>';
+}
+?>
+
+<?php
+if(isset($_POST['SLEEP'])) {
+$sleep_time = $_POST["sleep_time"];
+shell_exec("/usr/local/emhttp/plugins/prometheus_msi_afterburner_exporter/include/exec.sh set_sleep ".escapeshellarg($sleep_time)."");
 echo '<script>parent.window.location.reload();</script>';
 }
 ?>
