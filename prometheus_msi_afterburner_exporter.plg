@@ -2,11 +2,11 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "prometheus_msi_afterburner_exporter">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2021.08.06">
+  <!ENTITY version   "2021.09.17">
   <!ENTITY launch    "Settings/afterburner_exporter">
   <!ENTITY gitURL    "https://github.com/&author;/unraid-&name;/raw/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
-  <!ENTITY md5       "2e123f027e110a838c99f634e70d9fb0">
+  <!ENTITY md5       "ca95ef3208c7d703e48cfd97b9377bf9">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
@@ -14,6 +14,9 @@
 <PLUGIN  name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0" support="https://forums.unraid.net/topic/110995-plugin-prometheus-unraid-plugins/">
 
 <CHANGES>
+
+###2021.09.17
+- Fixed plugin to escape variables properly
 
 ###2021.08.06
 - Replaced ping with sleep time to wait for host on boot
@@ -63,7 +66,7 @@ msi_username=MSIAfterburner
 msi_password=17cc95b4017d496f82
 export-listen-address=0.0.0.0:9891
 export-metrics-endpoint=/metrics
-sleep_time=30' > "&plugin;/settings.cfg"
+sleep_time=300' > "&plugin;/settings.cfg"
 fi
 
 #Add sleep_time entry if not exists
